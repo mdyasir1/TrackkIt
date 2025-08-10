@@ -11,7 +11,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Loader2, ShoppingCart, Search, Filter, RefreshCw, DollarSign } from "lucide-react"
+import { Loader2, ShoppingCart, Search, Filter, RefreshCw, IndianRupee, ArrowUpRight } from "lucide-react"
+import Link from "next/link"
 
 interface InventoryItem {
   id: number
@@ -258,22 +259,22 @@ export default function SalesPage() {
                     <TableRow>
                       <TableHead className="font-semibold">Name</TableHead>
                       <TableHead className="font-semibold">Category</TableHead>
-                      <TableHead className="font-semibold text-right">Available</TableHead>
-                      <TableHead className="font-semibold text-right">Price</TableHead>
-                      <TableHead className="font-semibold">Status</TableHead>
+                      <TableHead className="font-semibold text-center">Available</TableHead>
+                      <TableHead className="font-semibold text-center">Price</TableHead>
+                      <TableHead className="font-semibold text-center">Status</TableHead>
                       <TableHead className="font-semibold text-center">Action</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {filteredItems.map((item) => (
+                    {filteredItems.slice(0, 10).map((item) => (
                       <TableRow key={item.id} className="hover:bg-gray-50">
                         <TableCell className="font-medium">{item.name}</TableCell>
                         <TableCell>
                           <Badge variant="outline">{item.category}</Badge>
                         </TableCell>
-                        <TableCell className="text-right font-mono">{item.quantity}</TableCell>
-                        <TableCell className="text-right font-mono">${item.price.toFixed(2)}</TableCell>
-                        <TableCell>{getStatusBadge(item.quantity)}</TableCell>
+                        <TableCell className="text-center font-mono">{item.quantity}</TableCell>
+                        <TableCell className="text-center font-mono">₹{item.price.toFixed(2)}</TableCell>
+                        <TableCell className="text-center">{getStatusBadge(item.quantity)}</TableCell>
                         <TableCell className="text-center">
                           <Button
                             size="sm"
@@ -289,6 +290,9 @@ export default function SalesPage() {
                     ))}
                   </TableBody>
                 </Table>
+                <Link href='/items'>
+                <h2 className="text-center bg-gray-100 rounded-md py-3 border border-red-700 font-medium mt-2 flex justify-center  items-center">Go to Items Page to view all Items <ArrowUpRight size={18}/></h2>
+                </Link>
               </div>
             )}
           </CardContent>
@@ -331,7 +335,7 @@ export default function SalesPage() {
             <CardContent className="p-6">
               <div className="text-center">
                 <div className="text-2xl font-bold text-purple-600">
-                  ${items.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2)}
+                  ₹{items.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2)}
                 </div>
                 <div className="text-sm text-gray-600">Total Inventory Value</div>
               </div>
@@ -344,7 +348,7 @@ export default function SalesPage() {
           <DialogContent>
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
-                <DollarSign className="h-5 w-5" />
+                <IndianRupee className="h-5 w-5" />
                 Process Sale
               </DialogTitle>
             </DialogHeader>
@@ -355,7 +359,7 @@ export default function SalesPage() {
                   <h3 className="font-semibold text-lg">{selectedItem.name}</h3>
                   <p className="text-gray-600">Category: {selectedItem.category}</p>
                   <p className="text-gray-600">Available: {selectedItem.quantity} units</p>
-                  <p className="text-gray-600">Price: ${selectedItem.price.toFixed(2)} each</p>
+                  <p className="text-gray-600">Price: ₹{selectedItem.price.toFixed(2)} each</p>
                 </div>
 
                 <div className="space-y-2">
@@ -376,9 +380,9 @@ export default function SalesPage() {
                   <div className="bg-blue-50 p-4 rounded-lg">
                     <p className="font-semibold">Sale Summary:</p>
                     <p>Quantity: {quantityToSell} units</p>
-                    <p>Unit Price: ${selectedItem.price.toFixed(2)}</p>
+                    <p>Unit Price: ₹{selectedItem.price.toFixed(2)}</p>
                     <p className="text-lg font-bold text-blue-600">
-                      Total: ${(selectedItem.price * Number.parseInt(quantityToSell)).toFixed(2)}
+                      Total: ₹{(selectedItem.price * Number.parseInt(quantityToSell)).toFixed(2)}
                     </p>
                   </div>
                 )}
@@ -392,7 +396,7 @@ export default function SalesPage() {
                       </>
                     ) : (
                       <>
-                        <DollarSign className="mr-2 h-4 w-4" />
+                        <IndianRupee className="mr-2 h-4 w-4" />
                         Complete Sale
                       </>
                     )}

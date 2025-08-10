@@ -174,7 +174,7 @@ export default function AddItemPage() {
                 <div className="flex justify-between">
                   <span className="text-sm text-muted-foreground">Total Value</span>
                   <span className="font-medium">
-                    $
+                    ₹
                     {((Number.parseFloat(formData.quantity) || 0) * (Number.parseFloat(formData.price) || 0)).toFixed(
                       2,
                     )}

@@ -11,7 +11,8 @@ import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Loader2, Plus, Package, Search, Filter, RefreshCw } from "lucide-react"
+import { Loader2, Plus, Package, Search, Filter, RefreshCw, ArrowUpRight } from "lucide-react"
+import Link from "next/link"
 
 interface InventoryItem {
   id: number
@@ -240,7 +241,7 @@ export default function InventoryPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="price">Price ($) *</Label>
+                  <Label htmlFor="price">Price (₹) *</Label>
                   <Input
                     id="price"
                     type="number"
@@ -329,27 +330,30 @@ export default function InventoryPage() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="font-semibold">Name</TableHead>
+                      <TableHead className="font-semibold ">Name</TableHead>
                       <TableHead className="font-semibold">Category</TableHead>
-                      <TableHead className="font-semibold text-right">Quantity</TableHead>
-                      <TableHead className="font-semibold text-right">Price</TableHead>
-                      <TableHead className="font-semibold">Status</TableHead>
+                      <TableHead className="font-semibold text-center">Quantity</TableHead>
+                      <TableHead className="font-semibold text-center">Price</TableHead>
+                      <TableHead className="font-semibold text-right">Status</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {filteredItems.map((item) => (
+                    {filteredItems.slice(0, 10).map((item) => (
                       <TableRow key={item.id} className="hover:bg-gray-50">
                         <TableCell className="font-medium">{item.name}</TableCell>
                         <TableCell>
                           <Badge variant="outline">{item.category}</Badge>
                         </TableCell>
-                        <TableCell className="text-right font-mono">{item.quantity}</TableCell>
-                        <TableCell className="text-right font-mono">${item.price.toFixed(2)}</TableCell>
-                        <TableCell>{getStatusBadge(item.quantity)}</TableCell>
+                        <TableCell className="text-center font-mono">{item.quantity}</TableCell>
+                        <TableCell className="text-center font-mono">₹{item.price.toFixed(2)}</TableCell>
+                        <TableCell className="text-right">{getStatusBadge(item.quantity)}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                 </Table>
+                <Link href='/items'>
+                <h2 className="text-center bg-gray-100 rounded-md border border-red-700 py-3 font-medium mt-2 flex justify-center  items-center">Go to Items Page to view all Items <ArrowUpRight size={18}/></h2>
+                </Link>
               </div>
             )}
           </CardContent>
