@@ -6,13 +6,13 @@ import { InventoryUpdateInput } from "@/types";
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } } // Corrected signature
 ) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { id } = params;
+  const { id } = context.params; // Changed to context.params
   const item = await prisma.inventory.findUnique({
     where: { id, userId: session.user.id },
     include: { category: true },
@@ -23,14 +23,14 @@ export async function GET(
 }
 
 export async function PUT(
-  req: NextRequest, // Changed from Request to NextRequest
-  { params }: { params: { id: string } }
+  req: NextRequest,
+  context: { params: { id: string } } // Corrected signature
 ) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { id } = params;
+  const { id } = context.params; // Changed to context.params
   const body = (await req.json()) as InventoryUpdateInput;
 
   const updated = await prisma.inventory.updateMany({
@@ -48,14 +48,14 @@ export async function PUT(
 }
 
 export async function DELETE(
-  _req: NextRequest, // Changed from Request to NextRequest
-  { params }: { params: { id: string } }
+  _req: NextRequest,
+  context: { params: { id: string } } // Corrected signature
 ) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { id } = params;
+  const { id } = context.params; // Changed to context.params
 
   const deletedInventory = await prisma.inventory.deleteMany({
     where: { id, userId: session.user.id },
