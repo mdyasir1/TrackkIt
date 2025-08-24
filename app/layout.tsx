@@ -1,5 +1,5 @@
 // app/layout.tsx
-import "../styles/globals.css";
+import "./globals.css";
 import Header from "@/components/Header";
 import { Providers } from "./providers";
 
@@ -16,7 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-gray-50 min-h-screen">
+      <body className="bg-background text-foreground min-h-screen">
         <Providers>
           <Header />
           <main className="max-w-6xl mx-auto px-4 py-6">{children}</main>

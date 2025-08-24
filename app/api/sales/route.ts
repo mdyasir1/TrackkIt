@@ -1,15 +1,20 @@
-// app/api/sales/route.ts
-import { prisma } from "../../../lib/prisma";
+import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../../../lib/auth";
-import { SaleCreateInput } from "../../../types";
+import { authOptions } from "@/lib/auth";
+import { SaleCreateInput } from "@/types";
 
 export async function GET() {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const sales = await prisma.sale.findMany({
+    where: { userId: session.user.id as string }, // Filter sales by user
     orderBy: { soldAt: "desc" },
-    include: { inventory: true, user: true },
+    include: { inventory: true },
   });
+
   return NextResponse.json(sales);
 }
 
@@ -25,8 +30,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
   }
 
-  // ensure inventory exists and has stock
-  const inv = await prisma.inventory.findUnique({ where: { id: inventoryId } });
+  // Ensure inventory exists and belongs to this user
+  const inv = await prisma.inventory.findUnique({
+    where: { id: inventoryId, userId: session.user.id },
+  });
+
   if (!inv)
     return NextResponse.json({ error: "Inventory not found" }, { status: 404 });
   if (inv.quantity < quantity)
@@ -42,9 +50,10 @@ export async function POST(req: Request) {
     include: { inventory: true },
   });
 
+  // Deduct stock for the same user
   await prisma.inventory.update({
-    where: { id: inventoryId },
-    data: { quantity: inv.quantity - quantity },
+    where: { id: inventoryId, userId: session.user.id },
+    data: { quantity: { decrement: quantity } },
   });
 
   return NextResponse.json(sale, { status: 201 });

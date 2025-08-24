@@ -30,13 +30,10 @@ export default function Header() {
             </>
           ) : (
             <>
-              <Link href="/(auth)/login" className="px-3 py-1 border rounded">
+              <Link href="/login" className="px-3 py-1 border rounded">
                 Sign in
               </Link>
-              <Link
-                href="/(auth)/register"
-                className="px-3 py-1 border rounded"
-              >
+              <Link href="/register" className="px-3 py-1 border rounded">
                 Register
               </Link>
             </>

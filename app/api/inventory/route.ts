@@ -1,4 +1,3 @@
-// app/api/inventory/route.ts
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
@@ -6,10 +5,16 @@ import { authOptions } from "@/lib/auth";
 import { InventoryCreateInput } from "@/types";
 
 export async function GET() {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const items = await prisma.inventory.findMany({
+    where: { userId: session.user.id as string }, // Filter by user
     include: { category: true },
     orderBy: { updatedAt: "desc" },
   });
+
   return NextResponse.json(items);
 }
 
@@ -32,7 +37,7 @@ export async function POST(req: Request) {
       categoryId,
       quantity,
       price,
-      userId: session.user.id as string,
+      userId: session.user.id as string, // Attach userId
     },
   });
 

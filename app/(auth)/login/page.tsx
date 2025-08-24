@@ -68,7 +68,7 @@ export default function LoginPage() {
         </button>
       </form>
       <div className="mt-4">
-        <a href="/(auth)/forgot-password" className="text-sm text-blue-600">
+        <a href="/forgot-password" className="text-sm text-blue-600">
           Forgot password?
         </a>
       </div>
