@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { InventoryUpdateInput } from "@/types";
@@ -8,7 +8,7 @@ interface Params {
   params: { id: string };
 }
 
-export async function GET(_req: Request, { params }: Params) {
+export async function GET(_req: NextRequest, { params }: Params) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -53,9 +53,9 @@ export async function DELETE(_req: Request, { params }: Params) {
   const { id } = params;
 
   // Delete sales only for the same user's inventory
-//   const deletedSales = await prisma.sale.deleteMany({
-//     where: { inventoryId: id, userId: session.user.id },
-//   });
+  //   const deletedSales = await prisma.sale.deleteMany({
+  //     where: { inventoryId: id, userId: session.user.id },
+  //   });
 
   const deletedInventory = await prisma.inventory.deleteMany({
     where: { id, userId: session.user.id },
