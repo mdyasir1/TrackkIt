@@ -1,40 +1,20 @@
 // types/index.ts
 
-// types/next-auth.d.ts
-import { DefaultSession, DefaultUser } from "next-auth";
-import { User as CustomUser } from "@/types"; // Import your custom User type
-
-declare module "next-auth" {
-  /**
-   * The shape of the user object returned in the session.
-   * Extends the default user to include all your custom fields.
-   */
-  interface User extends CustomUser {}
-
-  /**
-   * The shape of the session object.
-   * Adds your full custom user object to the session.
-   */
-  interface Session {
-    user: CustomUser & DefaultSession["user"];
-  }
-}
-
 export type ID = string;
 
 export interface User {
   id: ID;
   storeName: string;
   email: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date; // IMPORTANT: Changed to Date
+  updatedAt: Date; // IMPORTANT: Changed to Date
 }
 
 export interface Category {
   id: ID;
   name: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date; // IMPORTANT: Changed to Date
+  updatedAt: Date; // IMPORTANT: Changed to Date
 }
 
 export interface InventoryItem {
@@ -46,8 +26,8 @@ export interface InventoryItem {
   quantity: number;
   price: number;
   userId: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date; // IMPORTANT: Changed to Date
+  updatedAt: Date; // IMPORTANT: Changed to Date
 }
 
 export interface Sale {
@@ -56,7 +36,7 @@ export interface Sale {
   inventory?: InventoryItem;
   quantity: number;
   totalPrice: number;
-  soldAt: string;
+  soldAt: Date; // IMPORTANT: Changed to Date
   userId: string;
 }
 
