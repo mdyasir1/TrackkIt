@@ -34,15 +34,15 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         // @ts-expect-error - next-auth token typing augmentation omitted for brevity
-        token.id = (user as any).id ?? token.id;
-        // @ts-expect-error
-        token.storeName = (user as any).storeName ?? token.storeName;
+        token.id = (user as string).id ?? token.id;
+        // @ts-expect-error: This is needed because the library's types are incorrect.
+        token.storeName = (user as string).storeName ?? token.storeName;
       }
       return token;
     },
     async session({ session, token }) {
       if (token) {
-        // @ts-expect-error
+        // @ts-expect-error: This is needed because the library's types are incorrect.
         session.user = {
           ...(session.user ?? {}),
           id: token.id,
