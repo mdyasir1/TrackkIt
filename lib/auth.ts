@@ -1,7 +1,6 @@
 // lib/auth.ts
 import { prisma } from "@/lib/prisma";
-import { AuthOptions, User } from "next-auth";
-import { JWT } from "next-auth/jwt";
+import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 
@@ -24,27 +23,30 @@ export const authOptions: AuthOptions = {
 
         const isPasswordCorrect = await bcrypt.compare(
           credentials.password,
-          user.password // CORRECTED: Changed from user.passwordHash
+          user.password
         );
 
         if (!isPasswordCorrect) return null;
 
+        // Return the user object which includes id and storeName
         return user;
       },
     }),
   ],
   callbacks: {
-    async jwt({ token, user }: { token: JWT; user?: User | undefined }) {
+    // The user object here comes from the authorize function
+    jwt({ token, user }) {
       if (user) {
         token.id = user.id;
         token.storeName = user.storeName;
       }
       return token;
     },
-    async session({ session, token }: { session: any; token: JWT }) {
+    // The session object is what the client receives
+    session({ session, token }) {
       if (token && session.user) {
-        session.user.id = token.id;
-        session.user.storeName = token.storeName;
+        session.user.id = token.id as string;
+        session.user.storeName = token.storeName as string;
       }
       return session;
     },

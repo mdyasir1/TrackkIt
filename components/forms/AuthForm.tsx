@@ -5,17 +5,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { AuthRegisterInput } from "@/types";
+import { useState } from "react";
 
 const schema = z.object({
-  storeName: z.string().min(2, "Store name required"),
-  email: z.string().email("Invalid email"),
-  password: z.string().min(6, "Password min 6 chars"),
+  storeName: z.string().min(2, "Store name must be at least 2 characters."),
+  email: z.string().email("Please enter a valid email."),
+  password: z.string().min(6, "Password must be at least 6 characters."),
 });
 
 type FormData = z.infer<typeof schema>;
 
 export default function AuthForm() {
   const router = useRouter();
+  const [apiError, setApiError] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
@@ -25,6 +27,7 @@ export default function AuthForm() {
   });
 
   async function onSubmit(values: FormData) {
+    setApiError(null);
     const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -35,51 +38,60 @@ export default function AuthForm() {
       router.push("/login");
     } else {
       const json = await res.json();
-      alert(json?.error ?? "Register failed");
+      setApiError(json?.error ?? "Register failed");
     }
   }
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="max-w-md mx-auto space-y-4"
-    >
-      <div>
-        <label className="block mb-1">Store Name</label>
-        <input className="w-full border px-3 py-2" {...register("storeName")} />
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      {apiError && (
+        <p className="text-sm text-red-500 text-center">{apiError}</p>
+      )}
+      <div className="space-y-2">
+        <label className="text-sm font-medium leading-none" htmlFor="storeName">
+          Store Name
+        </label>
+        <input
+          id="storeName"
+          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+          {...register("storeName")}
+        />
         {errors.storeName && (
-          <p className="text-red-600 text-sm">{errors.storeName.message}</p>
+          <p className="text-sm text-red-500">{errors.storeName.message}</p>
         )}
       </div>
-
-      <div>
-        <label className="block mb-1">Email</label>
+      <div className="space-y-2">
+        <label className="text-sm font-medium leading-none" htmlFor="email">
+          Email
+        </label>
         <input
+          id="email"
           type="email"
-          className="w-full border px-3 py-2"
+          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
           {...register("email")}
         />
         {errors.email && (
-          <p className="text-red-600 text-sm">{errors.email.message}</p>
+          <p className="text-sm text-red-500">{errors.email.message}</p>
         )}
       </div>
-
-      <div>
-        <label className="block mb-1">Password</label>
+      <div className="space-y-2">
+        <label className="text-sm font-medium leading-none" htmlFor="password">
+          Password
+        </label>
         <input
+          id="password"
           type="password"
-          className="w-full border px-3 py-2"
+          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
           {...register("password")}
         />
         {errors.password && (
-          <p className="text-red-600 text-sm">{errors.password.message}</p>
+          <p className="text-sm text-red-500">{errors.password.message}</p>
         )}
       </div>
-
       <button
         type="submit"
         disabled={isSubmitting}
-        className="px-4 py-2 bg-slate-800 text-white rounded"
+        className="inline-flex items-center justify-center w-full h-10 rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 disabled:opacity-50"
       >
         {isSubmitting ? "Registering..." : "Register"}
       </button>

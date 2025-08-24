@@ -6,10 +6,10 @@ import * as z from "zod";
 import { InventoryCreateInput } from "@/types";
 
 const schema = z.object({
-  company: z.string().min(1),
-  model: z.string().min(1),
-  quantity: z.number().int().nonnegative(),
-  price: z.number().nonnegative(),
+  company: z.string().min(1, "Company is required."),
+  model: z.string().min(1, "Model is required."),
+  quantity: z.number().int().nonnegative("Must be a positive number."),
+  price: z.number().nonnegative("Must be a positive number."),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -24,7 +24,6 @@ export default function InventoryForm({
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-    // setValue,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: { company: "", model: "", quantity: 1, price: 0 },
@@ -46,51 +45,57 @@ export default function InventoryForm({
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-      <div>
-        <label className="block mb-1">Company</label>
-        <input className="w-full border px-3 py-2" {...register("company")} />
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <div className="space-y-2">
+        <label className="text-sm font-medium leading-none">Company</label>
+        <input
+          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+          {...register("company")}
+        />
         {errors.company && (
-          <p className="text-red-600">{errors.company.message}</p>
+          <p className="text-sm text-red-500">{errors.company.message}</p>
         )}
       </div>
-
-      <div>
-        <label className="block mb-1">Model</label>
-        <input className="w-full border px-3 py-2" {...register("model")} />
-        {errors.model && <p className="text-red-600">{errors.model.message}</p>}
+      <div className="space-y-2">
+        <label className="text-sm font-medium leading-none">Model</label>
+        <input
+          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+          {...register("model")}
+        />
+        {errors.model && (
+          <p className="text-sm text-red-500">{errors.model.message}</p>
+        )}
       </div>
-
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <label className="block mb-1">Quantity</label>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <label className="text-sm font-medium leading-none">Quantity</label>
           <input
             type="number"
-            className="w-full border px-3 py-2"
+            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
             {...register("quantity", { valueAsNumber: true })}
           />
           {errors.quantity && (
-            <p className="text-red-600">{errors.quantity.message}</p>
+            <p className="text-sm text-red-500">{errors.quantity.message}</p>
           )}
         </div>
-
-        <div>
-          <label className="block mb-1">Price (INR)</label>
+        <div className="space-y-2">
+          <label className="text-sm font-medium leading-none">
+            Price (INR)
+          </label>
           <input
             type="number"
-            className="w-full border px-3 py-2"
+            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
             {...register("price", { valueAsNumber: true })}
           />
           {errors.price && (
-            <p className="text-red-600">{errors.price.message}</p>
+            <p className="text-sm text-red-500">{errors.price.message}</p>
           )}
         </div>
       </div>
-
       <button
         type="submit"
         disabled={isSubmitting}
-        className="px-4 py-2 bg-slate-800 text-white rounded"
+        className="inline-flex items-center justify-center w-full h-10 rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 disabled:opacity-50"
       >
         {isSubmitting ? "Adding..." : "Add to Inventory"}
       </button>

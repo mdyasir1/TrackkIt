@@ -3,27 +3,32 @@
 @tailwind utilities;
 
 :root {
-  --background: #f5f6f8; /* light background */
-  --foreground: #1e293b; /* dark neutral text */
-  --primary: #2563eb; /* blue */
-  --secondary: #475569; /* slate */
-  --accent: #16a34a; /* green */
-  --danger: #dc2626; /* red */
+  --background: 240 10% 99%; /* Almost white */
+  --foreground: 240 10% 3.9%; /* Almost black */
+  --card: 240 10% 100%;
+  --card-foreground: 240 10% 3.9%;
+  --primary: 240 5.9% 10%;
+  --primary-foreground: 0 0% 100%;
+  --border: 240 5.9% 90%;
+  --input: 240 5.9% 90%;
+  --ring: 240 5.9% 10%;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0c0c0c; /* dark navy */
-    --foreground: #20799f; /* light text */
-    --primary: #3b82f6; /* slightly lighter blue */
-    --secondary: #64748b; /* slate for dark */
-    --accent: #22c55e; /* green */
-    --danger: #ef4444; /* red */
+.dark {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --primary: 0 0% 98%;
+  --primary-foreground: 240 5.9% 10%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --ring: 240 4.9% 83.9%;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }

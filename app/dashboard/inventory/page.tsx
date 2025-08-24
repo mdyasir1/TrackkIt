@@ -11,7 +11,9 @@ export default function InventoryPage() {
   async function load() {
     const res = await fetch("/api/inventory");
     const json = await res.json();
-    setItems(json);
+    // --- THIS IS THE FIX ---
+    // Ensures that `items` is always an array
+    setItems(Array.isArray(json) ? json : []);
   }
 
   useEffect(() => {
@@ -25,16 +27,15 @@ export default function InventoryPage() {
   }
 
   return (
-    <div>
-      <h1 className="text-2xl font-semibold mb-4">Inventory</h1>
-      <div className="grid grid-cols-2 gap-6">
-        <div className="bg-white p-4 rounded shadow">
-          <h3 className="font-medium mb-3">Add Item</h3>
+    <div className="flex flex-col gap-8">
+      <h1 className="text-3xl font-bold tracking-tight">Inventory</h1>
+      <div className="grid gap-8 lg:grid-cols-3">
+        <div className="lg:col-span-1 rounded-xl border bg-card text-card-foreground shadow p-6 h-fit">
+          <h3 className="font-semibold mb-4">Add Item</h3>
           <InventoryForm onSuccess={load} />
         </div>
-
-        <div className="bg-white p-4 rounded shadow col-span-1">
-          <h3 className="font-medium mb-3">All Items</h3>
+        <div className="lg:col-span-2 rounded-xl border bg-card text-card-foreground shadow p-6">
+          <h3 className="font-semibold mb-4">All Items</h3>
           <InventoryTable items={items} onDelete={handleDelete} />
         </div>
       </div>

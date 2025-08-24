@@ -1,6 +1,36 @@
 // components/InventoryTable.tsx
 "use client";
 import { InventoryItem } from "@/types";
+import { Edit, Trash2 } from "lucide-react";
+
+const StatusBadge = ({ status }: { status: string }) => {
+  const baseClasses = "px-2.5 py-0.5 text-xs font-semibold rounded-full";
+  if (status === "Out of stock") {
+    return (
+      <div
+        className={`${baseClasses} bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300`}
+      >
+        Out of stock
+      </div>
+    );
+  }
+  if (status === "Low stock") {
+    return (
+      <div
+        className={`${baseClasses} bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300`}
+      >
+        Low stock
+      </div>
+    );
+  }
+  return (
+    <div
+      className={`${baseClasses} bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300`}
+    >
+      In stock
+    </div>
+  );
+};
 
 export default function InventoryTable({
   items,
@@ -12,19 +42,31 @@ export default function InventoryTable({
   onEdit?: (id: string) => void;
 }) {
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full table-auto border-collapse">
-        <thead>
-          <tr className="text-left">
-            <th className="p-2">Company</th>
-            <th className="p-2">Model</th>
-            <th className="p-2">Qty</th>
-            <th className="p-2">Price (INR)</th>
-            <th className="p-2">Status</th>
-            <th className="p-2">Actions</th>
+    <div className="relative w-full overflow-auto">
+      <table className="w-full caption-bottom text-sm">
+        <thead className="[&_tr]:border-b">
+          <tr className="border-b transition-colors hover:bg-muted/50">
+            <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
+              Company
+            </th>
+            <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
+              Model
+            </th>
+            <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
+              Qty
+            </th>
+            <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
+              Price
+            </th>
+            <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
+              Status
+            </th>
+            <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground">
+              Actions
+            </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="[&_tr:last-child]:border-0">
           {items.map((it) => {
             const status =
               it.quantity === 0
@@ -33,24 +75,33 @@ export default function InventoryTable({
                 ? "Low stock"
                 : "In stock";
             return (
-              <tr key={it.id} className="border-t">
-                <td className="p-2">{it.company}</td>
-                <td className="p-2">{it.model}</td>
-                <td className="p-2">{it.quantity}</td>
-                <td className="p-2">₹{it.price}</td>
-                <td className="p-2">{status}</td>
-                <td className="p-2 space-x-2">
+              <tr
+                key={it.id}
+                className="border-b transition-colors hover:bg-muted/50"
+              >
+                <td className="p-4 align-middle font-medium">{it.company}</td>
+                <td className="p-4 align-middle text-muted-foreground">
+                  {it.model}
+                </td>
+                <td className="p-4 align-middle">{it.quantity}</td>
+                <td className="p-4 align-middle">
+                  ₹{it.price.toLocaleString()}
+                </td>
+                <td className="p-4 align-middle">
+                  <StatusBadge status={status} />
+                </td>
+                <td className="p-4 align-middle text-right space-x-2">
                   <button
                     onClick={() => onEdit?.(it.id)}
-                    className="px-2 py-1 border rounded"
+                    className="p-2 rounded-md hover:bg-secondary/10"
                   >
-                    Edit
+                    <Edit className="h-4 w-4" />
                   </button>
                   <button
                     onClick={() => onDelete?.(it.id)}
-                    className="px-2 py-1 border rounded text-red-600"
+                    className="p-2 rounded-md hover:bg-red-500/10 text-red-500"
                   >
-                    Delete
+                    <Trash2 className="h-4 w-4" />
                   </button>
                 </td>
               </tr>
