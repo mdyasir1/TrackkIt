@@ -4,11 +4,9 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { InventoryUpdateInput } from "@/types";
 
-// The "interface Params" has been removed.
-
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { id: string } } // This line is corrected
+  { params }: { params: { id: string } }
 ) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id)
@@ -25,8 +23,8 @@ export async function GET(
 }
 
 export async function PUT(
-  req: Request,
-  { params }: { params: { id: string } } // This line is corrected
+  req: NextRequest, // Changed from Request to NextRequest
+  { params }: { params: { id: string } }
 ) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id)
@@ -36,7 +34,7 @@ export async function PUT(
   const body = (await req.json()) as InventoryUpdateInput;
 
   const updated = await prisma.inventory.updateMany({
-    where: { id, userId: session.user.id }, // Ensure only the owner can update
+    where: { id, userId: session.user.id },
     data: body,
   });
 
@@ -50,19 +48,14 @@ export async function PUT(
 }
 
 export async function DELETE(
-  _req: Request,
-  { params }: { params: { id: string } } // This line is corrected
+  _req: NextRequest, // Changed from Request to NextRequest
+  { params }: { params: { id: string } }
 ) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id } = params;
-
-  // Delete sales only for the same user's inventory
-  //   const deletedSales = await prisma.sale.deleteMany({
-  //     where: { inventoryId: id, userId: session.user.id },
-  //   });
 
   const deletedInventory = await prisma.inventory.deleteMany({
     where: { id, userId: session.user.id },
