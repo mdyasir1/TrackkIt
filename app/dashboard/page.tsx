@@ -1,7 +1,5 @@
 // app/dashboard/page.tsx
-import { getSession } from "next-auth/react";
 import { prisma } from "@/lib/prisma";
-import { format } from "date-fns";
 
 export const revalidate = 0;
 

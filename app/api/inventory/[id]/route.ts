@@ -53,9 +53,9 @@ export async function DELETE(_req: Request, { params }: Params) {
   const { id } = params;
 
   // Delete sales only for the same user's inventory
-  const deletedSales = await prisma.sale.deleteMany({
-    where: { inventoryId: id, userId: session.user.id },
-  });
+//   const deletedSales = await prisma.sale.deleteMany({
+//     where: { inventoryId: id, userId: session.user.id },
+//   });
 
   const deletedInventory = await prisma.inventory.deleteMany({
     where: { id, userId: session.user.id },

@@ -33,17 +33,21 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        // @ts-ignore - next-auth token typing augmentation omitted for brevity
+        // @ts-expect-error - next-auth token typing augmentation omitted for brevity
         token.id = (user as any).id ?? token.id;
-        // @ts-ignore
+        // @ts-expect-error
         token.storeName = (user as any).storeName ?? token.storeName;
       }
       return token;
     },
     async session({ session, token }) {
       if (token) {
-        // @ts-ignore
-        session.user = { ...(session.user ?? {}), id: token.id, storeName: token.storeName };
+        // @ts-expect-error
+        session.user = {
+          ...(session.user ?? {}),
+          id: token.id,
+          storeName: token.storeName,
+        };
       }
       return session;
     },

@@ -24,7 +24,7 @@ export default function InventoryForm({
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-    setValue,
+    // setValue,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: { company: "", model: "", quantity: 1, price: 0 },
