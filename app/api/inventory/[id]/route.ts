@@ -4,11 +4,12 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { InventoryUpdateInput } from "@/types";
 
-interface Params {
-  params: { id: string };
-}
+// The "interface Params" has been removed.
 
-export async function GET(_req: NextRequest, { params }: Params) {
+export async function GET(
+  _req: NextRequest,
+  { params }: { params: { id: string } } // This line is corrected
+) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -23,7 +24,10 @@ export async function GET(_req: NextRequest, { params }: Params) {
   return NextResponse.json(item);
 }
 
-export async function PUT(req: Request, { params }: Params) {
+export async function PUT(
+  req: Request,
+  { params }: { params: { id: string } } // This line is corrected
+) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -45,7 +49,10 @@ export async function PUT(req: Request, { params }: Params) {
   return NextResponse.json({ success: true });
 }
 
-export async function DELETE(_req: Request, { params }: Params) {
+export async function DELETE(
+  _req: Request,
+  { params }: { params: { id: string } } // This line is corrected
+) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
